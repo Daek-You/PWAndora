@@ -1,8 +1,8 @@
 <h1 align="center">📱 PWAndora</h1>
+<p align="center">삼성전자 DA 사업부 연계 프로젝트 (1위)</p>
 <p align="center">
   <img src="readme/PWAndora.jpg" alt="PWAndora Logo" width="600"/>
-</p>
-
+</p>  
 
 ## 📌 목차
 
