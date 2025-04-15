@@ -1,0 +1,15 @@
+# 혹시 사용하는 Node.js 버전이 바뀌었다면, 아래 "FROM node:version"의 version을 사용하는 Node.js 버전으로 맞춰줘!
+# (그래야 로컬 환경과 운영 환경이 같아짐)
+FROM node:22.13.0
+
+WORKDIR /app
+
+# 빌드 관련 파일 복사
+COPY package.json package-lock.json ./
+
+# 의존성 설치
+RUN npm install
+
+# 소스 코드 복사는 Jenkins가 자동으로 처리
+
+CMD ["npm", "run", "build"]

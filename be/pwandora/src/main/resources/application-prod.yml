@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(Y3kkIC4JyQuYtm/CWRskOvOytKk1ALxjqTcqAJrQHVTgOileTqW6LV6HGofjamuX7cr+7ZhtEpLXCFmzFbVwifPCMPDFGbnt0SEXVsXMkofepJH1sUJy6OUlq14lgIN+wRbpcaON1N6sC9ggEP15S/NRMXu2KV0LeEs9zMzsv3Y=)
+    username: ENC(kFR2YpQXyQMSTVQsFAkS3w==)
+    password: ENC(WQEdAmcfdufqWfJu8evIWR1FzRSHj1KysRVCwmbDkis=)
+
+  jpa:
+    show-sql: true         # 프로덕션에서는 SQL 로깅 비활성화
+    hibernate:
+      ddl-auto: update        # 프로덕션에서는 스키마 자동 변경 방지
+    properties:
+      hibernate:
+        format_sql: true
+
+  data:
+    redis:
+      host: ENC(rG6vPUhD3132yTsnDEwAFQ==)
+      port: 6379        # Integer로 세팅할 수가 없어서 포트 공개 (EC2에선 방화벽 설정되어 있고, 매핑된 포트가 없어서 접근 불가라 안전)
+      password: ENC(MyYu4+4BiY1V0grTteU6Yvhy0zj2mHeOzwBbE0veO+s=)
+      connect-timeout: 60000    # 연결 및 작업 수행 시 최대 대기 시간(60초)
+
+  elasticsearch:
+    uris: ENC(MHyQVM1iOZOfAnwAX/9LqAyu71m+xpSvhvV4LcnnV5rraR/PVEO8pg==)
+    api-key: ENC(4sJFEdp9uWsmNEUxvQLzx9LNHVWNdFT5zSYVXFL8dXoWzisdWi/1KcFWs82wb9ifKonKYrspEzq64LZG6f+TtSmilP+m7QkK)
+
+# 서버 설정
+server:
+  port: 8080
+  error:
+    include-stacktrace: never   # 에러 응답에 스택트레이스를 포함하지 않음
+    include-message: never      # 에러 응답에 상세 메시지를 포함하지 않음
+  forward-headers-strategy: framework  # 프록시(Nginx) 뒤에서 실행될 때 올바른 스키마(HTTP/HTTPS) 감지
+  servlet:
+    session:
+      cookie:
+        secure: true       # HTTPS를 통해서만 쿠키 전송
+        http-only: true    # JavaScript에서 쿠키 접근 불가
+        same-site: none    # Tizen에서 iframe을 써서 우리 PWA를 띄우기에, Site Origin이 달라지는 문제가 발생한 걸 해결하기 위한 조치

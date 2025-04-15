@@ -1,0 +1,60 @@
+# Tizen, Android 포함된 베이스 이미지 사용
+FROM daekyooou/tizen-android-base:latest
+
+# 작업 디렉토리 설정
+WORKDIR /app
+
+# 소스 코드 복사
+COPY . .
+COPY plugin-cache /app/plugin-cache 
+
+# JDK 1.8 추가 설치 (Cordova Android 패키징에서 요구)
+RUN apt-get update && \
+    apt-get install -y openjdk-8-jdk && \
+    update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java 1 && \
+    update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-8-openjdk-amd64/bin/javac 1 && \
+    update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java && \
+    update-alternatives --set javac /usr/lib/jvm/java-8-openjdk-amd64/bin/javac
+
+# JDK 1.8 환경 변수 설정 (오버라이드)
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+ENV PATH=$JAVA_HOME/bin:$PATH
+
+# Gradle 설치 (필요 시)
+RUN apt-get update && \
+    apt-get install -y wget unzip && \
+    wget https://services.gradle.org/distributions/gradle-7.6.1-bin.zip -P /tmp && \
+    unzip -d /opt/gradle /tmp/gradle-7.6.1-bin.zip && \
+    ln -s /opt/gradle/gradle-7.6.1/bin/gradle /usr/bin/gradle && \
+    rm -rf /tmp/gradle-7.6.1-bin.zip
+
+# Cordova 글로벌 설치 및 텔레메트리 설정
+RUN npm install -g cordova@12 && \
+    npm install -g cordova-android@7.1.4 && \
+    cordova telemetry on --no-prompt || echo "yes" | cordova telemetry on
+
+# Android 작업 디렉토리 생성 및 Cordova 프로젝트 생성
+WORKDIR /app/Android-workspace
+RUN cordova create pwandora com.s005.ssafy pwandora
+
+WORKDIR /app/Android-workspace/pwandora
+RUN cordova platform add android@7.1.4 && \
+    cordova plugin add cordova-plugin-inappbrowser --searchpath=/app/plugin-cache --verbose && \
+    cordova plugin add cordova-plugin-whitelist --searchpath=/app/plugin-cache --verbose && \
+    cordova plugin add cordova-plugin-splashscreen --searchpath=/app/plugin-cache --verbose
+
+# Tizen 작업 디렉토리 생성
+RUN mkdir -p /app/Tizen-workspace
+
+# 의존성 설치 및 Playwright 설치
+WORKDIR /app
+COPY package*.json ./
+RUN npm install && \
+    npx playwright install-deps chromium && \
+    npx playwright install chromium
+
+# 포트 설정
+EXPOSE 3000
+
+# 앱 시작 명령어
+CMD ["node", "app.js"]

@@ -1,0 +1,162 @@
+pipeline {
+    agent any
+    
+    environment {
+        // Docker Hub 자격 증명
+        DOCKER_HUB_CREDS = credentials('DockerHub')
+        // Docker 이미지 정보
+        DOCKER_IMAGE = 'daekyooou/pwandora-crawl'
+        DOCKER_TAG = "${env.BUILD_NUMBER}"
+        // EC2 정보
+        REMOTE_HOST = 'EC2-Crawl-Server'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                // 소스 코드 체크아웃
+                checkout scm
+            }
+        }
+
+        // // SonarQube 분석 단계 추가
+        // stage('SonarQube Analysis') {
+        //     steps {
+        //         dir('crawl/pwandora') {  // Express.js 프로젝트 디렉토리로 수정
+        //             withSonarQubeEnv('SonarQube-Server') {
+        //                 sh '''
+        //                     # 기본 시스템 도구 설치 확인
+        //                     echo "Installing required tools if needed..."
+        //                     apt-get update -qq && apt-get install -y -qq curl unzip > /dev/null || echo "Failed to install tools, but continuing..."
+                            
+        //                     # 소나 스캐너 CLI 다운로드
+        //                     echo "Downloading SonarScanner CLI..."
+        //                     curl -sL -o sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+                            
+        //                     # 압축 해제 및 실행 권한 설정
+        //                     echo "Extracting SonarScanner CLI..."
+        //                     unzip -q sonar-scanner.zip
+        //                     mv sonar-scanner-4.8.0.2856-linux sonar-scanner
+        //                     chmod +x sonar-scanner/bin/sonar-scanner
+                            
+        //                     # 디버깅 정보 출력
+        //                     echo "Current directory: $(pwd)"
+        //                     echo "SonarScanner version: $(./sonar-scanner/bin/sonar-scanner --version 2>&1 | head -n 1)"
+                            
+        //                     # 소나 스캐너 실행
+        //                     echo "Running SonarQube analysis..."
+        //                     ./sonar-scanner/bin/sonar-scanner \
+        //                     -Dsonar.projectKey=pwandora-crawl-backend \
+        //                     -Dsonar.projectName='Pwandora Crawl Backend' \
+        //                     -Dsonar.sources=. \
+        //                     -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/public/**,**/*.test.js,**/*.spec.js \
+        //                     -Dsonar.sourceEncoding=UTF-8
+                            
+        //                     # 분석 완료 확인
+        //                     echo "SonarQube analysis completed."
+                            
+        //                     # 임시 파일 정리
+        //                     rm -rf sonar-scanner.zip sonar-scanner
+        //                     '''
+        //             }
+        //         }
+        //     }
+        // }
+        
+        stage('Prepare Environment') {
+            steps {
+                // .env 파일을 Jenkins Credentials에서 가져와 프로젝트 루트에 복사
+                withCredentials([file(credentialsId: 'Express-env', variable: 'ENV_FILE')]) {
+                    sh 'cp $ENV_FILE ./crawl/pwandora/.env'
+                }
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                // Dockerfile-crawl을 사용하여 Docker 이미지 빌드
+                sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} -f crawl/pwandora/Dockerfile-crawl ./crawl/pwandora"
+                
+                // latest 태그도 추가
+                sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
+            }
+        }
+        
+        stage('Push to Docker Hub') {
+            steps {
+                // Docker Hub에 로그인
+                sh "echo ${DOCKER_HUB_CREDS_PSW} | docker login -u ${DOCKER_HUB_CREDS_USR} --password-stdin"
+                
+                // 이미지 푸시
+                sh "docker push ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                sh "docker push ${DOCKER_IMAGE}:latest"
+            }
+        }
+        
+        stage('Deploy to EC2') {
+            steps {
+                // 배포에 필요한 파일을 작업 디렉토리에 직접 준비
+                sh "cp crawl/pwandora/docker-compose-crawl.yml docker-compose-crawl.yml"
+
+                withCredentials([file(credentialsId: 'Express-env', variable: 'ENV_FILE')]) {
+                    sh "cp \$ENV_FILE .env"
+                }
+                
+                // 원격 서버에 파일 전송 및 서비스 시작
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: "${REMOTE_HOST}",
+                            transfers: [
+                                sshTransfer(
+                                    sourceFiles: "docker-compose-crawl.yml,.env",
+                                    remoteDirectory: "",  // 이미 /home/ubuntu/express-docker/로 설정됨
+                                    execCommand: """
+                                        # Docker 최신 이미지 가져오기
+                                        docker pull ${DOCKER_IMAGE}:latest
+                                        
+                                        # 네트워크 확인 및 생성
+                                        if ! docker network ls | grep pwandora_network > /dev/null; then
+                                            docker network create pwandora_network
+                                        fi
+
+                                        # 작업 디렉토리로 이동
+                                        cd /home/ubuntu/express-docker
+                                        
+                                        # Docker Compose로 서비스 재시작
+                                        docker-compose -f docker-compose-crawl.yml down
+                                        docker-compose -f docker-compose-crawl.yml up -d
+                                        
+                                        # 컨테이너 상태 확인
+                                        echo "배포된 컨테이너 상태:"
+                                        docker ps
+                                    """
+                                )
+                            ]
+                        )
+                    ]
+                )
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Docker Hub 로그아웃
+            sh "docker logout"
+            
+            // 임시 파일 및 작업 공간 정리
+            sh "rm -f docker-compose.yml .env"
+            sh "rm -f ./crawl/pwandora/.env"
+            cleanWs()
+        }
+        
+        success {
+            echo '배포가 성공적으로 완료되었습니다!'
+        }
+        
+        failure {
+            echo '배포 과정에서 오류가 발생했습니다. 로그를 확인해 주세요.'
+        }
+    }
+}

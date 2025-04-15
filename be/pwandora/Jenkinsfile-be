@@ -1,0 +1,137 @@
+pipeline {
+    agent any
+
+    environment {
+        // Docker Hub 관련 환경 변수
+        DOCKER_IMAGE_NAME = "daekyooou/pwandora-springboot"
+        DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
+        DOCKER_CREDENTIALS = credentials('DockerHub') // Jenkins 자격 증명 ID
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Project Build') {
+            steps {
+                dir('./be/pwandora') {
+                    // 프로젝트 권한 변경
+                    sh 'chmod +x ./gradlew'
+                    
+                    // JASYPT_KEY 파일 복사 후 빌드
+                    withCredentials([file(credentialsId: 'jasypt-encryption-key', variable: 'JASYPT_KEY_FILE')]) {
+                        sh 'cp $JASYPT_KEY_FILE ./src/main/resources/application-key.yml'
+                        sh './gradlew clean build -x test'
+                    }
+                }
+            }
+        }
+
+        // SonarQube 분석 단계 추가
+        // stage('SonarQube Analysis') {
+        //     steps {
+        //         dir('./be/pwandora') {
+        //             withSonarQubeEnv('SonarQube-Server') {
+        //                 script {
+        //                     def scannerHome = tool 'SonarQube-Scanner'
+        //                     sh """
+        //                         ${scannerHome}/bin/sonar-scanner \\
+        //                         -Dsonar.projectKey=pwandora-backend \\
+        //                         -Dsonar.projectName='Pwandora Backend' \\
+        //                         -Dsonar.sources=src/main/java \\
+        //                         -Dsonar.java.binaries=build/classes/java/main \\
+        //                         -Dsonar.java.source=17 \\
+        //                         -Dsonar.sourceEncoding=UTF-8
+        //                     """
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        stage('Docker Login') {
+            steps {
+                sh 'echo $DOCKER_CREDENTIALS_PSW | docker login -u $DOCKER_CREDENTIALS_USR --password-stdin'
+            }
+        }
+
+        stage('Docker Build and Push') {
+            steps {
+                dir('./be/pwandora') {
+                    sh '''
+                        # BuildKit 비활성화 - 레거시 빌더 사용
+                        export DOCKER_BUILDKIT=0
+
+                        # 이미지 빌드
+                        docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} -f Dockerfile-prod .
+                        docker push ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                        docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} ${DOCKER_IMAGE_NAME}:latest
+                        docker push ${DOCKER_IMAGE_NAME}:latest
+                    '''
+                }
+            }
+        }
+
+        stage('Copy Compose File to EC2') {
+            steps {
+                echo 'docker-compose 파일을 EC2로 전송 중...'
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'EC2-Server',
+                            transfers: [
+                                sshTransfer(
+                                    sourceFiles: 'be/pwandora/docker-compose-prod-be.yml',
+                                    remoteDirectory: '',
+                                    execCommand: 'echo "docker-compose 파일 전송 완료"'
+                                )
+                            ]
+                        )
+                    ]
+                )
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'EC2-Server',
+                            transfers: [
+                                sshTransfer(
+                                    execCommand: '''
+                                        # Docker 최신 이미지 가져오기
+                                        docker pull ${DOCKER_IMAGE_NAME}:latest
+
+                                        # 네트워크 확인 및 생성
+                                        if ! docker network ls | grep pwandora_network > /dev/null; then
+                                            docker network create pwandora_network
+                                        fi
+
+                                        # 애플리케이션 재배포
+                                        cd /home/ubuntu/springboot-docker/be/pwandora
+                                        docker-compose -f docker-compose-prod-be.yml down
+                                        docker-compose -f docker-compose-prod-be.yml up -d
+
+                                        # 사용하지 않는 이미지 정리
+                                        docker system prune -f
+                                    '''
+                                )
+                            ]
+                        )
+                    ]
+                )
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker logout'
+        }
+    }
+}

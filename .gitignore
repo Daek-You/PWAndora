@@ -1,0 +1,117 @@
+### IntelliJ IDEA specific files ###
+.idea/
+*.iml
+*.iws
+out/
+
+be/pwandora/.idea/
+be/pwandora/*.iml
+be/pwandora/*.iws
+be/pwandora/out/
+be/pwandora/!**/src/main/**/out/
+be/pwandora/!**/src/test/**/out/
+
+crwal/pwandora/.idea/
+crwal/pwandora/*.iml
+crwal/pwandora/*.iws
+crwal/pwandora/out/
+crwal/pwandora/!**/src/main/**/out/
+crwal/pwandora/!**/src/test/**/out/
+
+### Backend ###
+be/pwandora/!gradle/wrapper/gradle-wrapper.jar
+be/pwandora/!**/src/main/**/build/
+be/pwandora/!**/src/test/**/build/
+be/pwandora/.gradle
+be/pwandora/build/
+
+### key file ###
+be/pwandora/src/main/resources/application-key.yml
+be/pwandora/src/main/resources/application-remote.yml
+be/pwandora/docker-compose-remote.yml
+be/pwandora/run-springboot.ps1
+be/pwandora/stop-springboot.ps1
+
+### Query DSL ###
+be/pwandora/src/main/generated
+
+### VS Code ###
+.vscode/
+fe/pwandora/.vscode/
+be/pwandora/.vscode/
+
+### Frontend ###
+# 의존성
+fe/pwandora/node_modules
+fe/pwandora/.pnp
+fe/pwandora/.pnp.js
+
+# 빌드 결과물
+fe/pwandora/build/
+fe/pwandora/dist/
+fe/pwandora/.next/
+fe/pwandora/out/
+
+# 환경 변수
+fe/pwandora/.env
+fe/pwandora/.env.local
+fe/pwandora/.env.development.local
+fe/pwandora/.env.test.local
+fe/pwandora/.env.production.local
+
+# 로그
+fe/pwandora/npm-debug.log*
+fe/pwandora/yarn-debug.log*
+fe/pwandora/yarn-error.log*
+
+# 캐시
+fe/pwandora/.cache/
+fe/pwandora/.parcel-cache
+
+# 테스트 커버리지
+fe/pwandora/coverage/
+
+# PWA
+fe/pwandora/public/sw.js
+fe/pwandora/public/workbox-*.js
+
+# 기타
+fe/pwandora/.DS_Store
+fe/pwandora/Thumbs.db
+
+### crawl ###
+crawl/flask/**/*.pyc
+crawl/flask/**/__pycache__/
+crawl/flask/.env
+
+# Node.js dependencies
+crawl/pwandora/node_modules/
+
+# 환경 변수 파일
+crawl/pwandora/.env
+crawl/pwandora/*.pem
+crawl/pwandora/run-express.ps1
+crawl/pwandora/stop-express.ps1
+
+# 빌드 디렉토리
+crawl/pwandora/dist/
+crawl/pwandora/build/
+
+# 테스트 커버리지 리포트
+crawl/pwandora/coverage/
+
+# 로그 파일
+crawl/pwandora/logs/
+
+# 디버그 로그
+crawl/pwandora/npm-debug.log*
+crawl/pwandora/yarn-debug.log*
+crawl/pwandora/yarn-error.log*
+
+# 운영체제 관련 파일
+crawl/pwandora/.DS_Store
+crawl/pwandora/Thumbs.db
+
+# 패키징 저장 경로
+crawl/pwandora/Android-workspace
+crawl/pwandora/Tizen-workspace

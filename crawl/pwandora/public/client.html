@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SSE 테스트 클라이언트</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background: #f9f9f9;
+        padding: 20px;
+      }
+      #log p {
+        margin: 5px 0;
+        font-size: 14px;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>📡 SSE 연결 로그</h2>
+    <div id="log"></div>
+
+    <script>
+      const log = document.getElementById('log');
+      const evtSource = new EventSource(
+        `http://localhost:3000/api/monitoring/sse`
+      );
+
+      evtSource.addEventListener('pwaCrawler', (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          const time = new Date().toLocaleTimeString();
+          log.innerHTML += `<p>📨 [${time}] <strong>${
+            data.type
+          }</strong> - ${JSON.stringify(data)}</p>`;
+        } catch (err) {
+          log.innerHTML += `<p style="color:red">❌ JSON 파싱 실패: ${e.data}</p>`;
+        }
+      });
+
+      evtSource.onerror = (e) => {
+        log.innerHTML += `<p style="color:red">❌ SSE 연결 오류 또는 종료</p>`;
+      };
+    </script>
+  </body>
+</html>

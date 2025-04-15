@@ -1,0 +1,50 @@
+@import url("./assets/fonts/breeze_sans/style.css");
+/* @import 'tailwindcss'; */
+
+/* @theme {
+  --color-black: #000000;
+  --color-white: #FAFAFA;
+  --color-gray: #858585;
+  --color-foreground: #E6F2FF;
+  --color-foreground-bright: #ECF5FF;
+  --color-foreground-gray: #EEEEEE;
+  --color-primary: #0381FE;
+  --color-primary-dark: #0072DE;
+  --color-active: #3E91FF;
+  --color-red: #F01446;
+  --color-green: #15B76D;
+} */
+
+:root {
+  font-family: "Noto Sans KR", 'Nunito Sans';
+}
+
+:root::-webkit-scrollbar {
+  display: none;
+}
+
+:root {
+  -ms-overflow-style: none;
+  /* IE and 엣지 */
+  scrollbar-width: none;
+  /* 파이어폭스 */
+}
+
+.w-xs {
+  width: 320px;
+}
+
+.min-w-xs {
+  min-width: 320px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and 엣지 */
+  scrollbar-width: none;
+  /* 파이어폭스 */
+}

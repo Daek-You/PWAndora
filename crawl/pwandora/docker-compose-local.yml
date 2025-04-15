@@ -1,0 +1,15 @@
+services:
+  pwandora-express:
+    build:
+      context: .
+      dockerfile: Dockerfile-crawl
+    image: daekyooou/pwandora-crawl:latest
+    container_name: pwandora-crawl
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    restart: always
+    volumes:
+      - ./Tizen-workspace:/app/Tizen-workspace
+      - ./Android-workspace:/app/Android-workspace

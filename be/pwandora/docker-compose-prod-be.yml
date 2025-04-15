@@ -1,0 +1,16 @@
+services:
+  springboot:
+    container_name: springboot
+    image: daekyooou/pwandora-springboot:latest
+    restart: always
+    expose:
+      - "8080"                             # 내부 네트워크에서만 접근 가능 (Nginx에서 리버스 프록시)
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      TZ: Asia/Seoul
+    networks:
+      - pwandora_network
+
+networks:
+  pwandora_network:
+    external: true                        # Nginx, MySQL, Redis, ElasticSearch와 통신하기 위한 외부 네트워크

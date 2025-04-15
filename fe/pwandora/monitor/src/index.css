@@ -1,0 +1,39 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-pwandora-white: #FAFAFA;
+  --color-pwandora-gray: #858585;
+  --color-pwandora-red: #F01446;
+  --color-pwandora-green: #15B76D;
+  --color-pwandora-black: #000000;
+
+  --color-pwandora-foreground: #E6F2FF;
+  --color-pwandora-foreground-bright: #ECF5FF;
+  --color-pwandora-foreground-gray: #EEEEEE;
+
+  --color-pwandora-primary: #0381FE;
+  --color-pwandora-primary-dark: #0072DE;
+  --color-pwandora-active: #3E91FF;
+
+  --drop-shadow-elevation-1: 4px 4px 32px rgba(0, 0, 0, 0.05)
+}
+
+:root {
+  font-family: 'Noto Sans KR';
+  background-color: var(--color-pwandora-white);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and 엣지 */
+  scrollbar-width: none;
+  /* 파이어폭스 */
+}
+
+.no-select {
+  user-select: none;
+}

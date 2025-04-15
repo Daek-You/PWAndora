@@ -1,0 +1,18 @@
+services:
+  pwandora-express:
+    image: daekyooou/pwandora-crawl:latest
+    container_name: pwandora-crawl
+    env_file:
+      - .env
+    environment:
+      - ANDROID_SDK_ROOT=/opt/android-sdk
+    restart: always
+    volumes:
+      - ./Tizen-workspace:/app/Tizen-workspace
+      - ./Android-workspace:/app/Android-workspace
+    networks:
+      - pwandora_network
+
+networks:
+  pwandora_network:
+    external: true

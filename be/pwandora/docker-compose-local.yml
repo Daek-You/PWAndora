@@ -1,0 +1,62 @@
+services:
+  spring-app:
+    build:
+      context: .  # Dockerfile 이 위치한 폴더
+      dockerfile: Dockerfile-local  # Spring Boot Dockerfile 이름
+    restart: always
+    ports:
+      - "8080:8080"  # Spring Boot 애플리케이션 포트 매핑
+    environment:
+      SPRING_PROFILES_ACTIVE: local  # Spring Boot 활성 프로파일 설정
+      TZ: Asia/Seoul
+    depends_on:
+      - mysql  # MySQL이 먼저 실행되도록 설정
+      - redis  # Redis 의존성 추가
+      - elasticsearch
+
+  mysql:
+    image: mysql:8.0.36
+    restart: always
+    ports:
+      - "3300:3306"
+    volumes:
+      - pwandora-mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: pwandora
+      MYSQL_USER: local
+      MYSQL_PASSWORD: local
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Asia/Seoul
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - pwandora-redis:/data
+    command: redis-server --appendonly yes  # 데이터 지속성을 위한 AOF 설정
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.3
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - cluster.name=pwandora-es-cluster
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false  # 보안 기능 비활성화
+    ports:
+      - "9200:9200"
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+
+
+volumes:
+  pwandora-mysql:  # MySQL 데이터 저장소
+  pwandora-redis:  # Redis 데이터 저장소 추가
+  es-data:  # Elasticsearch 데이터 저장소 추가

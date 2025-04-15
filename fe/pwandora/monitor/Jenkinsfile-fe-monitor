@@ -1,0 +1,96 @@
+pipeline {
+    // Docker 컨테이너를 빌드 환경으로 사용
+    agent {
+        dockerfile {
+            filename 'Dockerfile-fe-monitor'
+            dir 'fe/pwandora/monitor'
+            // 호스트의 디렉토리를 컨테이너 내부의 디렉토리로 마운트 (빌드 결과물이 호스트로 자동 복사되도록 설정)
+            args '-v /home/ubuntu/pwandora-frontend/monitor:/app/build_output'
+        }
+    }
+    
+    stages {
+        stage('Clean Previous Build') {
+            steps {
+                // 빌드 전에 이전 빌드 결과물 정리 (마운트된 호스트 디렉토리를 비움)
+                sh 'rm -rf /app/build_output/*'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                dir('fe/pwandora/monitor') {
+                    // .env 파일 추가
+                    withCredentials([file(credentialsId: 'React-monitor-env', variable: 'MONITOR_ENV')]) {
+                        sh 'cp $MONITOR_ENV ./.env'
+                    }
+
+                    // Node.js 의존성 패키지 설치
+                    sh 'npm install'
+                    
+                    // React 애플리케이션 빌드 실행 (package.json의 build 스크립트 실행)
+                    sh 'npm run build'
+                    
+                    // Vite 빌드 결과물(dist/)을 마운트된 볼륨으로 복사
+                    sh 'cp -r dist/* /app/build_output/'
+                    
+                    // 복사된 파일에 적절한 권한 부여 (읽기/실행) -> Nginx가 파일을 읽고 서빙할 수 있도록 함
+                    sh 'chmod -R 755 /app/build_output/'
+                }
+            }
+        }
+        
+        // SonarQube 분석 단계 추가 - 공식 소나 스캐너 CLI 직접 다운로드 방식 사용
+        // stage('SonarQube Analysis') {
+        //     steps {
+        //         dir('fe/pwandora/monitor') {
+        //             withSonarQubeEnv('SonarQube-Server') {
+        //                 sh '''
+        //                     # 기본 시스템 도구 설치 확인
+        //                     echo "Installing required tools if needed..."
+        //                     apt-get update -qq && apt-get install -y -qq curl unzip > /dev/null || echo "Failed to install tools, but continuing..."
+                            
+        //                     # 소나 스캐너 CLI 다운로드
+        //                     echo "Downloading SonarScanner CLI..."
+        //                     curl -sL -o sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+                            
+        //                     # 압축 해제 및 실행 권한 설정
+        //                     echo "Extracting SonarScanner CLI..."
+        //                     unzip -q sonar-scanner.zip
+        //                     mv sonar-scanner-4.8.0.2856-linux sonar-scanner
+        //                     chmod +x sonar-scanner/bin/sonar-scanner
+                            
+        //                     # 디버깅 정보 출력
+        //                     echo "Current directory: $(pwd)"
+        //                     echo "SonarScanner version: $(./sonar-scanner/bin/sonar-scanner --version 2>&1 | head -n 1)"
+                            
+        //                     # 소나 스캐너 실행
+        //                     echo "Running SonarQube analysis..."
+        //                     ./sonar-scanner/bin/sonar-scanner \
+        //                     -Dsonar.projectKey=pwandora-frontend-monitor \
+        //                     -Dsonar.projectName='Pwandora Frontend Monitor' \
+        //                     -Dsonar.sources=src \
+        //                     -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/public/** \
+        //                     -Dsonar.sourceEncoding=UTF-8
+                            
+        //                     # 분석 완료 확인
+        //                     echo "SonarQube analysis completed."
+                            
+        //                     # 임시 파일 정리
+        //                     rm -rf sonar-scanner.zip sonar-scanner
+        //                     '''
+        //             }
+        //         }
+        //     }
+        // }
+    }
+    
+    post {
+        success {
+            echo 'Build and deployment successful for fe-monitor!'
+        }
+        failure {
+            echo 'Build or deployment failed for fe-monitor!'
+        }
+    }
+}

@@ -1,0 +1,91 @@
+FROM ubuntu:20.04
+
+# 메타데이터 설정
+LABEL maintainer="DaekYou"
+LABEL description="Base image with Node.js, Tizen Studio CLI and Android SDK CLI tools for PWA packaging"
+
+# 환경 변수 설정
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 32비트 아키텍처 지원 활성화
+RUN dpkg --add-architecture i386
+
+# 필요한 저장소 추가
+RUN apt-get update && apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get update
+
+RUN apt-get install -y \
+    nodejs \
+    wget \
+    pciutils \
+    zip \
+    unzip \
+    git \
+    ca-certificates \
+    rpm2cpio \
+    cpio \
+    expect \
+    # 기본 라이브러리
+    libc6 \
+    libstdc++6 \
+    zlib1g \
+    libbz2-1.0 \
+    libxml2 \
+    # Tizen Studio 관련 패키지
+    libwebkit2gtk-4.0-37 \
+    libxtst6 \
+    libgtk-3-0 \
+    libasound2 \
+    libcairo2 \
+    libfontconfig1 \
+    # Android SDK 관련 패키지
+    openjdk-17-jdk \
+    lib32z1 \
+    lib32stdc++6 \
+    libx11-6 \
+    libxrender1 \
+    libxi6 \
+    libgl1-mesa-glx \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# 비-루트 사용자 생성 (Tizen Studio 설치용)
+RUN useradd -m -s /bin/bash tizen
+
+# 작업 디렉토리 설정
+WORKDIR /opt
+
+# 설치 스크립트 복사 및 실행 권한 부여
+COPY install-tizen.sh /opt/
+COPY install-android.sh /opt/
+RUN sed -i 's/\r$//' /opt/install-tizen.sh && \
+    sed -i 's/\r$//' /opt/install-android.sh && \
+    chmod +x /opt/install-tizen.sh && \
+    chmod +x /opt/install-android.sh
+
+# Tizen Studio 설치를 위한 디렉토리 생성 및 권한 설정
+RUN mkdir -p /home/tizen/tizen-studio && \
+    mkdir -p /home/tizen/.package-manager/jdk && \
+    mkdir -p /home/tizen/tizen-studio-data && \
+    chown -R tizen:tizen /home/tizen && \
+    chmod -R 755 /home/tizen
+
+# Tizen Studio 설치 (비-루트 사용자로)
+USER tizen
+RUN /opt/install-tizen.sh
+USER root
+
+# Android SDK 명령줄 도구 설치 (root 사용자로)
+RUN mkdir -p /opt/android-sdk && \
+    /opt/install-android.sh
+
+# 환경 변수 설정
+ENV PATH=$PATH:/home/tizen/tizen-studio/tools/ide/bin:/home/tizen/tizen-studio/tools:/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools
+ENV TIZEN_STUDIO_HOME=/home/tizen/tizen-studio
+ENV ANDROID_HOME=/opt/android-sdk
+ENV ANDROID_SDK_ROOT=/opt/android-sdk
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
+# 애플리케이션 작업 디렉토리 설정
+WORKDIR /app

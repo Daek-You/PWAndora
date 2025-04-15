@@ -1,0 +1,346 @@
+{
+  "apps": [
+    {
+      "id": "1",
+      "name": "K-ing",
+      "icon": "https://github.com/user-attachments/assets/e65f41de-4808-4c73-b118-6fc77d7f93f3",
+      "categories": [
+        "Food & Drink"
+      ],
+      "installed": false,
+      "downloads": 1213,
+      "size": "1.5MB",
+      "description": "Order food and drinks from K-ing",
+      "ageRating": "3+",
+      "languages": "English, Korean",
+      "permissions": "Location, Storage",
+      "screenshots": [
+        "/images/screenshots/instagram1.webp",
+        "/images/screenshots/instagram2.webp",
+        "/images/screenshots/instagram3.webp",
+        "/images/screenshots/instagram4.webp",
+        "/images/screenshots/instagram5.webp",
+        "/images/screenshots/instagram6.webp",
+        "/images/screenshots/instagram7.webp"
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Ddangx3",
+      "icon": "https://github.com/user-attachments/assets/3356ee40-c517-4b68-a1bf-3ce795de782f",
+      "categories": [
+        "Shopping"
+      ],
+      "installed": false,
+      "downloads": 64123,
+      "size": "5.2MB",
+      "description": "An online auction platform for buying and selling second-hand items.",
+      "ageRating": "7+",
+      "languages": "English, Japanese, Korean",
+      "permissions": "Storage, Contacts",
+      "screenshots": [
+        "/images/screenshots/instagram1.webp",
+        "/images/screenshots/instagram2.webp",
+        "/images/screenshots/instagram3.webp",
+        "/images/screenshots/instagram4.webp",
+        "/images/screenshots/instagram5.webp",
+        "/images/screenshots/instagram6.webp",
+        "/images/screenshots/instagram7.webp"
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Starbucks",
+      "icon": "https://github.com/user-attachments/assets/aeb74d20-5821-4e4a-9d0d-6cb4ce379606",
+      "categories": [
+        "Food & Drink"
+      ],
+      "installed": true,
+      "downloads": 12641213,
+      "size": "1.3MB",
+      "description": "Order your favorite Starbucks drinks",
+      "ageRating": "3+",
+      "languages": "English, Spanish",
+      "permissions": "Location, Storage",
+      "screenshots": [
+        "/images/screenshots/instagram1.webp",
+        "/images/screenshots/instagram2.webp",
+        "/images/screenshots/instagram3.webp",
+        "/images/screenshots/instagram4.webp",
+        "/images/screenshots/instagram5.webp",
+        "/images/screenshots/instagram6.webp",
+        "/images/screenshots/instagram7.webp"
+      ]
+    },
+    {
+      "id": "4",
+      "name": "X",
+      "icon": "https://github.com/user-attachments/assets/f634e38f-0ed6-4a41-bc22-7019ac179996",
+      "categories": [
+        "Social Media"
+      ],
+      "installed": false,
+      "downloads": 4841213,
+      "size": "2.1MB",
+      "description": "Connect with friends on X",
+      "ageRating": "12+",
+      "languages": "English, Chinese",
+      "permissions": "Location, Camera, Microphone, Storage, Contacts",
+      "screenshots": [
+        "/images/screenshots/instagram1.webp",
+        "/images/screenshots/instagram2.webp",
+        "/images/screenshots/instagram3.webp",
+        "/images/screenshots/instagram4.webp",
+        "/images/screenshots/instagram5.webp",
+        "/images/screenshots/instagram6.webp",
+        "/images/screenshots/instagram7.webp"
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Reddit",
+      "icon": "https://github.com/user-attachments/assets/b2a91d93-b34b-4778-9338-711f2bebbff3",
+      "categories": [
+        "Social Media"
+      ],
+      "installed": true,
+      "downloads": 341213,
+      "size": "3.4MB",
+      "description": "Join communities on Reddit",
+      "ageRating": "17+",
+      "languages": "English",
+      "permissions": "Location, Storage",
+      "screenshots": [
+        "/images/screenshots/instagram1.webp",
+        "/images/screenshots/instagram2.webp",
+        "/images/screenshots/instagram3.webp",
+        "/images/screenshots/instagram4.webp",
+        "/images/screenshots/instagram5.webp",
+        "/images/screenshots/instagram6.webp",
+        "/images/screenshots/instagram7.webp"
+      ]
+    },
+    {
+      "id": "6",
+      "name": "YouTube",
+      "icon": "https://github.com/user-attachments/assets/a98ae451-ac2e-433e-a04a-9494fabc7cc9",
+      "categories": [
+        "Video"
+      ],
+      "installed": false,
+      "downloads": 965841213,
+      "size": "4.7MB",
+      "description": "Watch videos on YouTube",
+      "ageRating": "12+",
+      "languages": "English, Spanish, French",
+      "permissions": "Location, Camera, Microphone, Storage",
+      "screenshots": [
+        "/images/screenshots/instagram1.webp",
+        "/images/screenshots/instagram2.webp",
+        "/images/screenshots/instagram3.webp",
+        "/images/screenshots/instagram4.webp",
+        "/images/screenshots/instagram5.webp",
+        "/images/screenshots/instagram6.webp",
+        "/images/screenshots/instagram7.webp"
+      ]
+    },
+    {
+      "id": "7",
+      "name": "Facebook",
+      "icon": "https://github.com/user-attachments/assets/bd52d3a6-bc5f-473f-b6a7-6f41f8bb66dc",
+      "categories": [
+        "Social Media"
+      ],
+      "installed": true,
+      "downloads": 6841213,
+      "size": "3.6MB",
+      "description": "Connect with friends on Facebook",
+      "ageRating": "12+",
+      "languages": "English, Spanish, French, German",
+      "permissions": "Location, Camera, Microphone, Storage, Contacts",
+      "screenshots": [
+        "/images/screenshots/instagram1.webp",
+        "/images/screenshots/instagram2.webp",
+        "/images/screenshots/instagram3.webp",
+        "/images/screenshots/instagram4.webp",
+        "/images/screenshots/instagram5.webp",
+        "/images/screenshots/instagram6.webp",
+        "/images/screenshots/instagram7.webp"
+      ]
+    },
+    {
+      "id": "8",
+      "name": "Spotify",
+      "icon": "https://github.com/user-attachments/assets/b990b753-1b9e-4a9d-841e-46b78877cc42",
+      "categories": [
+        "Music"
+      ],
+      "installed": true,
+      "downloads": 2841213,
+      "size": "2.8MB",
+      "description": "Listen to music on Spotify",
+      "ageRating": "12+",
+      "languages": "English, Spanish, French, German, Japanese",
+      "permissions": "Location, Storage, Contacts",
+      "screenshots": [
+        "/images/screenshots/instagram1.webp",
+        "/images/screenshots/instagram2.webp",
+        "/images/screenshots/instagram3.webp",
+        "/images/screenshots/instagram4.webp",
+        "/images/screenshots/instagram5.webp",
+        "/images/screenshots/instagram6.webp",
+        "/images/screenshots/instagram7.webp"
+      ]
+    },
+    {
+      "id": "9",
+      "name": "TikTok",
+      "icon": "https://github.com/user-attachments/assets/77da02a7-d401-4d45-ac0a-2e8e23d317ec",
+      "categories": [
+        "Video"
+      ],
+      "installed": true,
+      "downloads": 551213,
+      "size": "4.3MB",
+      "description": "Create and watch short videos on TikTok",
+      "ageRating": "12+",
+      "languages": "English, Spanish, French, German, Japanese, Korean",
+      "permissions": "Location, Camera, Microphone, Storage, Contacts",
+      "screenshots": [
+        "/images/screenshots/instagram1.webp",
+        "/images/screenshots/instagram2.webp",
+        "/images/screenshots/instagram3.webp",
+        "/images/screenshots/instagram4.webp",
+        "/images/screenshots/instagram5.webp",
+        "/images/screenshots/instagram6.webp",
+        "/images/screenshots/instagram7.webp"
+      ]
+    },
+    {
+      "id": "10",
+      "name": "Instagram",
+      "icon": "https://github.com/user-attachments/assets/143ab8e4-4149-4a12-8257-344ba7958ab5",
+      "categories": [
+        "Social Media"
+      ],
+      "installed": false,
+      "downloads": 12841213,
+      "size": "4.12MB",
+      "description": "Create & share photos, stories, & reels with friends you love",
+      "ageRating": "12+",
+      "languages": "English, Arabic, French, German, Indonesian",
+      "permissions": "Location, Camera, Microphone, Storage, Contacts",
+      "screenshots": [
+        "/images/screenshots/instagram1.webp",
+        "/images/screenshots/instagram2.webp",
+        "/images/screenshots/instagram3.webp",
+        "/images/screenshots/instagram4.webp",
+        "/images/screenshots/instagram5.webp",
+        "/images/screenshots/instagram6.webp",
+        "/images/screenshots/instagram7.webp"
+      ]
+    }
+  ],
+  "appsBackup": [
+    {
+      "id": "1",
+      "name": "K-ing",
+      "icon": "https://github.com/user-attachments/assets/e65f41de-4808-4c73-b118-6fc77d7f93f3",
+      "categories": [
+        "Food & Drink"
+      ],
+      "installed": "false",
+      "downloads": "301040506"
+    },
+    {
+      "id": "2",
+      "name": "Ddangx3",
+      "icon": "https://github.com/user-attachments/assets/3356ee40-c517-4b68-a1bf-3ce795de782f",
+      "categories": [
+        "Games"
+      ],
+      "installed": "false",
+      "downloads": "301040506"
+    },
+    {
+      "id": "3",
+      "name": "Starbucks",
+      "icon": "https://github.com/user-attachments/assets/aeb74d20-5821-4e4a-9d0d-6cb4ce379606",
+      "categories": [
+        "Food & Drink"
+      ],
+      "installed": "true",
+      "downloads": "301040506"
+    },
+    {
+      "id": "4",
+      "name": "X",
+      "icon": "https://github.com/user-attachments/assets/f634e38f-0ed6-4a41-bc22-7019ac179996",
+      "categories": [
+        "Social Media"
+      ],
+      "installed": "false",
+      "downloads": "301040506"
+    },
+    {
+      "id": "5",
+      "name": "Reddit",
+      "icon": "https://github.com/user-attachments/assets/b2a91d93-b34b-4778-9338-711f2bebbff3",
+      "categories": [
+        "Social Media"
+      ],
+      "installed": "true",
+      "downloads": "301040506"
+    },
+    {
+      "id": "6",
+      "name": "YouTube",
+      "icon": "https://github.com/user-attachments/assets/a98ae451-ac2e-433e-a04a-9494fabc7cc9",
+      "categories": [
+        "Video"
+      ],
+      "installed": "false",
+      "downloads": "301040506"
+    },
+    {
+      "id": "7",
+      "name": "Facebook",
+      "icon": "https://github.com/user-attachments/assets/bd52d3a6-bc5f-473f-b6a7-6f41f8bb66dc",
+      "categories": [
+        "Social Media"
+      ],
+      "installed": "true",
+      "downloads": "301040506"
+    },
+    {
+      "id": "8",
+      "name": "Spotify",
+      "icon": "https://github.com/user-attachments/assets/b990b753-1b9e-4a9d-841e-46b78877cc42",
+      "categories": [
+        "Music"
+      ],
+      "installed": "true",
+      "downloads": "301040506"
+    },
+    {
+      "id": "9",
+      "name": "TikTok",
+      "icon": "https://github.com/user-attachments/assets/77da02a7-d401-4d45-ac0a-2e8e23d317ec",
+      "categories": [
+        "Video"
+      ],
+      "installed": "true",
+      "downloads": "301040506"
+    },
+    {
+      "id": "10",
+      "name": "Instagram",
+      "icon": "https://github.com/user-attachments/assets/143ab8e4-4149-4a12-8257-344ba7958ab5",
+      "categories": [
+        "Social Media"
+      ],
+      "installed": "false",
+      "downloads": "301040506"
+    }
+  ]
+}
