@@ -152,6 +152,6 @@
 
 ## 4. 아키텍처 및 ERD
 
-  <img src="readme/architecture.jpg" alt="architecture"/>
+  <img src="readme/Architecture.webp" alt="architecture"/>
 
   <img src="readme/PWAndora-erd.png" alt="erd"/>  
